@@ -8,7 +8,15 @@ export type Accord = {
     data: {[string]: State},
 
     __index: Accord,
-    newState: (self: Accord, stateName: string, defaultValue: any) -> any
+    newState: (self: Accord, stateName: string, defaultValue: any) -> any,
+    Connect: (
+        self: Accord,
+        callback: (stateName: string, value: any?, lastValue: any?) -> nil
+    ) -> signal.ScriptConnection,
+    ConnectOnce: (
+        self: Accord,
+        callback: (stateName: string, value: any?, lastValue: any?) -> nil
+    ) -> signal.ScriptConnection
 }
 
 

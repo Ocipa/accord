@@ -1,22 +1,24 @@
 return function()
     local accord = require(script.Parent)
 
-    describe("state", function()
-        it("new state", function()
-            local name = tostring(math.random())
-            accord:newState(name, 0)
-            expect(accord[name]).to.be.ok()
-        end)
+    local random = Random.new()
 
-        it("new state with default value", function()
-            local name = tostring(math.random())
-            local value = math.random(1, 999999)
-            accord:newState(name, value)
-            expect(accord[name].value).to.equal(value)
-        end)
+    it("new state", function()
+        local name = tostring(random:NextNumber())
+        accord:newState(name, 0)
+        expect(accord[name]).to.be.ok()
+    end)
 
-        it("create value change method", function()
-            local name = tostring(math.random())
+    it("new state with default value", function()
+        local name = tostring(random:NextNumber())
+        local value = random:NextNumber()
+        accord:newState(name, value)
+        expect(accord[name].value).to.equal(value)
+    end)
+
+    describe("value change method", function()
+        it("create", function()
+            local name = tostring(random:NextNumber())
             accord:newState(name, 0)
 
             local worked = false
@@ -29,9 +31,9 @@ return function()
             expect(worked).to.be.ok()
         end)
 
-        it("value change method, changing value", function()
-            local name = tostring(math.random())
-            local value = math.random(1, 999999)
+        it("changing value", function()
+            local name = tostring(random:NextNumber())
+            local value = random:NextNumber()
             accord:newState(name, 0)
             
             accord[name].test = function(self, number: number)
@@ -42,15 +44,33 @@ return function()
             expect(accord[name]._lastValue).to.equal(0)
             expect(accord[name].value).to.equal(value)
         end)
+    end)
 
-        it("connect to a state", function()
-            local name = tostring(math.random())
+    describe("connections", function()
+        it("connect", function()
+            local name = tostring(random:NextNumber())
             accord:newState(name, 0)
 
             local connection = accord[name]:Connect(function()
             end)
 
             expect(connection and connection.Connected).to.be.ok()
+        end)
+
+        it("connect once", function()
+            local name = tostring(random:NextNumber())
+            accord:newState(name, 0)
+
+            local num = 0
+            accord[name]:ConnectOnce(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]._signal:Fire()
+            expect(num).to.equal(1)
+            accord[name]._signal:Fire()
+            expect(num).to.equal(1)
         end)
     end)
 end
