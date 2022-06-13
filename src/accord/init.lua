@@ -11,7 +11,7 @@ local module = {
 module.__index = module
 
 
-function module:newState(stateName, defaultValue)
+function module:NewState(stateName, defaultValue)
     module.data[stateName] = require(script.state)._new(stateName, defaultValue)
 end
 

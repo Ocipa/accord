@@ -10,7 +10,7 @@ return function()
     describe("connections", function()
         it("connect", function()
             local name = tostring(random:NextNumber())
-            accord:newState(name, 0)
+            accord:NewState(name, 0)
 
             accord[name].imp = function(self)
                 self.value += 1
@@ -28,7 +28,7 @@ return function()
 
         it("connect once", function()
             local name = tostring(random:NextNumber())
-            accord:newState(name, 0)
+            accord:NewState(name, 0)
 
             accord[name].imp = function(self)
                 self.value += 1

@@ -5,21 +5,21 @@ return function()
 
     it("new state", function()
         local name = tostring(random:NextNumber())
-        accord:newState(name, 0)
+        accord:NewState(name, 0)
         expect(accord[name]).to.be.ok()
     end)
 
     it("new state with default value", function()
         local name = tostring(random:NextNumber())
         local value = random:NextNumber()
-        accord:newState(name, value)
+        accord:NewState(name, value)
         expect(accord[name].value).to.equal(value)
     end)
 
     describe("value change method", function()
         it("create", function()
             local name = tostring(random:NextNumber())
-            accord:newState(name, 0)
+            accord:NewState(name, 0)
 
             local worked = false
 
@@ -34,7 +34,7 @@ return function()
         it("changing value", function()
             local name = tostring(random:NextNumber())
             local value = random:NextNumber()
-            accord:newState(name, 0)
+            accord:NewState(name, 0)
             
             accord[name].test = function(self, number: number)
                 self.value += number
@@ -49,7 +49,7 @@ return function()
     describe("connections", function()
         it("connect", function()
             local name = tostring(random:NextNumber())
-            accord:newState(name, 0)
+            accord:NewState(name, 0)
 
             local connection = accord[name]:Connect(function()
             end)
@@ -59,7 +59,7 @@ return function()
 
         it("connect once", function()
             local name = tostring(random:NextNumber())
-            accord:newState(name, 0)
+            accord:NewState(name, 0)
 
             local num = 0
             accord[name]:ConnectOnce(function()
