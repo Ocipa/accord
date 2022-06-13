@@ -13,6 +13,12 @@
       }
     },
 
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+
+      "$path": "test"
+    },
+
     "StarterPlayer": {
       "$className": "StarterPlayer",
 
