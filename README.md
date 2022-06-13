@@ -6,7 +6,7 @@
 
 ## API
 
-`Accord:newState(stateName: string, defaultValue: any): State`
+`Accord:NewState(stateName: string, defaultValue: any): State`
 
 `Accord:Connect(callback: (stateName: string, value: any?, lastValue: any?): nil): signal.ScriptConnection`
 
@@ -29,7 +29,7 @@
 ```lua
 local accord = require(path to accord)
 
-accord:newState("TestState", 0)
+accord:NewState("TestState", 0)
 
 function accord.TestState:TestMethod(number: number)
     self.value += number
@@ -50,7 +50,7 @@ accord.TestState:TestMethod(7)
 -- script1
 local accord = require(path to accord)
 
-accord:newState("SomeState", "Hello")
+accord:NewState("SomeState", "Hello")
 
 function accord.SomeState:Concat(other: string)
     self.value = self.value .. other
