@@ -1,0 +1,13 @@
+# Project place file
+/accord.rbxlx
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+/*.rbxl
+
+/Packages
+/client
+
+wally.lock
