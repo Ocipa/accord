@@ -2,7 +2,7 @@
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local testEz = require(replicatedStorage.Packages.testez)
+local testEz = require(replicatedStorage.DevPackages.testez)
 
 local result = testEz.TestBootstrap:run(
     {replicatedStorage.accord},
