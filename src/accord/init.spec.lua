@@ -44,5 +44,31 @@ return function()
             accord[name]:imp()
             accord[name]:imp()
         end)
+
+        it("disconnect all", function()
+            local connection = accord:Connect(function(...)
+            end)
+
+            expect(connection.Connected).to.equal(true)
+
+            accord:DisconnectAll()
+
+            expect(connection.Connected).never.equal(true)
+        end)
+    end)
+
+    it("destroy state", function()
+        local name1 = tostring(random:NextNumber())
+        local name2 = tostring(random:NextNumber())
+        accord:NewState(name1, 0)
+        accord:NewState(name2, 0)
+
+        expect(accord[name1]).to.be.ok()
+        expect(accord[name2]).to.be.ok()
+
+        accord:DestroyState(name1)
+
+        expect(accord[name1]).never.to.be.ok()
+        expect(accord[name2]).to.be.ok()
     end)
 end

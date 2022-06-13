@@ -14,6 +14,10 @@
 
 `Accord:ConnectOnce(callback: (stateName: string, value: any?, lastValue: any?): nil): nil`
 
+`Accord:DisconnectAll(): nil`
+
+`Accord:DestroyState(stateName: string): nil`
+
 ---
 
 `State:GetValue(): any?`
@@ -21,6 +25,10 @@
 `State:Connect(callback: (value: any?, lastValue: any?): nil): signal.ScriptConnection`
 
 `State:ConnectOnce(callback: (value: any?, lastValue: any?): nil): nil`
+
+`State:DisconnectAll(): nil`
+
+`State:Destroy(): nil`
 
 
 

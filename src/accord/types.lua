@@ -18,7 +18,9 @@ export type Accord = {
     ConnectOnce: (
         self: Accord,
         callback: (stateName: string, value: any?, lastValue: any?) -> nil
-    ) -> nil
+    ) -> nil,
+    DisconnectAll: (self: Accord) -> nil,
+    DestroyState: (self: Accord, stateName: string) -> nil
 }
 
 
@@ -28,15 +30,16 @@ export type State = {
     value: any?,
     _signal: signal.Class,
     _methods: {[string]: (self: State, ...any) -> any},
-    _connections: {[number]: signal.ScriptConnection},
 
-    [string]: (self: State, ...any) -> any,
+    [string]: (self: State, ...any) -> any?,
 
     __index: (self: State, key: string) -> any?,
     __newindex: (self: State, key: string, value: any?) -> nil,
     GetValue: (self: State) -> any?,
     Connect: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> signal.ScriptConnection,
     ConnectOnce: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> nil,
+    DisconnectAll: (self: State) -> nil,
+    Destroy: (self: State) -> nil,
     _new: (stateName: string, defaultValue: any?) -> State
 }
 

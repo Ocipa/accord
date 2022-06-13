@@ -72,5 +72,36 @@ return function()
             accord[name]._signal:Fire()
             expect(num).to.equal(1)
         end)
+
+        it("disconnect all", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            expect(accord[name]._signal._head).never.to.be.ok()
+
+            local connection = accord[name]:Connect(function()
+            end)
+
+            expect(accord[name]._signal._head).to.be.ok()
+
+            accord[name]:DisconnectAll()
+            expect(accord[name]._signal._head).never.to.be.ok()
+            expect(connection and connection.Connected).never.to.be.equal(true)
+        end)
+    end)
+
+    it("destroy", function()
+        local name1 = tostring(random:NextNumber())
+        local name2 = tostring(random:NextNumber())
+        accord:NewState(name1, 0)
+        accord:NewState(name2, 0)
+
+        expect(accord[name1]).to.be.ok()
+        expect(accord[name2]).to.be.ok()
+
+        accord[name1]:Destroy()
+
+        expect(accord[name1]).never.to.be.ok()
+        expect(accord[name2]).to.be.ok()
     end)
 end

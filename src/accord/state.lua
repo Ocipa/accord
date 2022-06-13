@@ -58,6 +58,18 @@ function module:ConnectOnce(callback)
     return self._signal:ConnectOnce(callback)
 end
 
+function module:DisconnectAll()
+    self._signal:DisconnectAll()
+end
+
+function module:Destroy()
+    -- NOTE: destroy the state from accord so that accord's index of this state
+    -- is also removed
+    require(script.Parent):DestroyState(self._stateName)
+
+    return nil
+end
+
 function module._new(stateName, defaultValue)
     local self = setmetatable({}, module) :: types.State
 
@@ -68,7 +80,6 @@ function module._new(stateName, defaultValue)
 
     rawset(self, "_signal", signal.new())
     rawset(self, "_methods", {})
-    rawset(self, "_connections", {})
 
     return self
 end

@@ -29,6 +29,35 @@ function module:ConnectOnce(callback)
     return self._signal:ConnectOnce(callback)
 end
 
+function module:DisconnectAll()
+    self._signal:DisconnectAll()
+end
+
+function module:DestroyState(stateName)
+    local state = self.data[stateName]
+
+    if not state then
+        return
+    end
+
+    self.data[stateName] = nil
+    state = setmetatable(state, nil)
+
+    if state._signal then
+        state._signal:Destroy()
+    end
+
+    for i, _ in state._methods do
+        state._methods[i] = nil
+    end
+
+    for i, _ in self do
+        state[i] = nil
+    end
+
+    return nil
+end
+
 return setmetatable(module, {
     __index = function(self, key)
         return module.data[key]
