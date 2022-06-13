@@ -1,5 +1,5 @@
-# accord
-
+<h1 align="center">accord</h1>
+<div align="center">⚠️Repo is in development, EVERYTHING is subject to change⚠️</div>
 
 
 
@@ -7,6 +7,8 @@
 ## API
 
 `Accord:NewState(stateName: string, defaultValue: any): State`
+
+`Accord:GetState(stateName: string): State`
 
 `Accord:Connect(callback: (stateName: string, value: any?, lastValue: any?): nil): signal.ScriptConnection`
 
@@ -73,3 +75,7 @@ task.delay(1, function()
     -- does not print since ConnectOnce was used
 end)
 ```
+
+## License
+
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.

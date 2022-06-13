@@ -9,7 +9,8 @@ export type Accord = {
     _signal: signal.Class,
 
     __index: Accord,
-    NewState: (self: Accord, stateName: string, defaultValue: any) -> any,
+    NewState: (self: Accord, stateName: string, defaultValue: any) -> State,
+    GetState: (self: Accord, stateName: string) -> State,
     Connect: (
         self: Accord,
         callback: (stateName: string, value: any?, lastValue: any?) -> nil

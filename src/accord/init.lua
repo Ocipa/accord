@@ -13,6 +13,12 @@ module.__index = module
 
 function module:NewState(stateName, defaultValue)
     module.data[stateName] = require(script.state)._new(stateName, defaultValue)
+
+    return module.data[stateName]
+end
+
+function module:GetState(stateName)
+    return self.data[stateName]
 end
 
 function module:Connect(callback)
