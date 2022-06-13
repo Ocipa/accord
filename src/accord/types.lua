@@ -6,6 +6,7 @@ local signal = require(replicatedStorage.Packages.fastsignal)
 export type Accord = {
     [string]: State,
     data: {[string]: State},
+    _signal: signal.Class,
 
     __index: Accord,
     newState: (self: Accord, stateName: string, defaultValue: any) -> any,
@@ -16,7 +17,7 @@ export type Accord = {
     ConnectOnce: (
         self: Accord,
         callback: (stateName: string, value: any?, lastValue: any?) -> nil
-    ) -> signal.ScriptConnection
+    ) -> nil
 }
 
 
@@ -34,7 +35,7 @@ export type State = {
     __newindex: (self: State, key: string, value: any?) -> nil,
     GetValue: (self: State) -> any?,
     Connect: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> signal.ScriptConnection,
-    ConnectOnce: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> signal.ScriptConnection,
+    ConnectOnce: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> nil,
     _new: (stateName: string, defaultValue: any?) -> State
 }
 

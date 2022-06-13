@@ -8,8 +8,6 @@ local config = require(script.Parent.config)
 local module = {} :: types.State
 
 function module:__newindex(key, value)
-    -- print("__newindex", key, value)
-
     if rawget(self, "_methods")[key] or module[key] then
         if typeof(module[key]) == "function" then
             return self[key](self, value)
@@ -35,6 +33,7 @@ function module:__newindex(key, value)
             self._lastValue = _lastValue
 
             self._signal:Fire(self.value, self._lastValue)
+            require(script.Parent)._signal:Fire(self._stateName, self.value, self._lastValue)
         end
     end)
 end
