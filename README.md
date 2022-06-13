@@ -8,14 +8,17 @@
 
 `Accord:newState(stateName: string, defaultValue: any): State`
 
+`Accord:Connect(callback: (stateName: string, value: any?, lastValue: any?): nil): signal.ScriptConnection`
+
+`Accord:ConnectOnce(callback: (stateName: string, value: any?, lastValue: any?): nil): nil`
 
 ---
 
 `State:GetValue(): any?`
 
-`State:Connect(callback: (value: any?, lastValue: any?)): signal.ScriptConnection`
+`State:Connect(callback: (value: any?, lastValue: any?): nil): signal.ScriptConnection`
 
-`State:ConnectOnce(callback: (value: any?, lastValue: any?)): signal.ScriptConnection`
+`State:ConnectOnce(callback: (value: any?, lastValue: any?): nil): nil`
 
 
 
