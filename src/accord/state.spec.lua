@@ -86,7 +86,169 @@ return function()
 
             accord[name]:DisconnectAll()
             expect(accord[name]._signal._head).never.to.be.ok()
-            expect(connection and connection.Connected).never.to.be.equal(true)
+            expect(connection and connection.Connected).never.to.equal(true)
+        end)
+    end)
+
+    describe("isEqual", function()
+        it("nil", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].set = function(self, num: number?)
+                self.value = num
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:set(nil)
+            expect(num).to.equal(1)
+            accord[name]:set(nil)
+            expect(num).to.equal(1)
+        end)
+
+        it("string", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, "a")
+
+            accord[name].con = function(self, str: string)
+                self.value = self.value .. str
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:con("b")
+            expect(num).to.equal(1)
+            accord[name]:con("")
+            expect(num).to.equal(1)
+        end)
+
+        it("number", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].imp = function(self, number: number)
+                self.value += number
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:imp(1)
+            expect(num).to.equal(1)
+            accord[name]:imp(0)
+            expect(num).to.equal(1)
+        end)
+
+        it("boolean", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, true)
+
+            accord[name].set = function(self, bool: boolean)
+                self.value = bool
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:set(false)
+            expect(num).to.equal(1)
+            accord[name]:set(false)
+            expect(num).to.equal(1)
+        end)
+
+        it("table", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, {0, {"a", "b"}, false})
+
+            accord[name].set = function(self, tble)
+                self.value = tble
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:set({0, {"c", {"b"}}, true})
+            expect(num).to.equal(1)
+            accord[name]:set({0, {"c", {"b"}}, true})
+            expect(num).to.equal(1)
+        end)
+
+        it("function", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, function() end)
+
+            accord[name].set = function(self, fnc)
+                self.value = fnc
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:set(function() end)
+            expect(num).to.equal(1)
+            accord[name]:set(accord[name]:GetValue())
+            expect(num).to.equal(1)
+        end)
+
+        it("thread", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, coroutine.create(function() end))
+
+            accord[name].set = function(self, thread)
+                self.value = thread
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:set(coroutine.create(function() end))
+            expect(num).to.equal(1)
+            accord[name]:set(accord[name]:GetValue())
+            expect(num).to.equal(1)
+        end)
+
+        it("userdata", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, newproxy(false))
+
+            accord[name].set = function(self, uData)
+                self.value = uData
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:set(newproxy(false))
+            expect(num).to.equal(1)
+            accord[name]:set(accord[name]:GetValue())
+            expect(num).to.equal(1)
         end)
     end)
 

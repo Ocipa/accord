@@ -45,7 +45,9 @@ export type State = {
 
 
 export type Config = {
-    SILENCE_ERRORS: boolean
+    SILENCE_ERRORS: boolean,
+    CHECK_IS_EQUAL_BEFORE_UPDATE: boolean,
+    CLONE_VALUE_TO_LAST_VALUE: boolean
 }
 
 

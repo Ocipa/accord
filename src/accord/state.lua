@@ -5,21 +5,89 @@ local signal = require(replicatedStorage.Packages.fastsignal)
 local types = require(script.Parent.types)
 local config = require(script.Parent.config)
 
-local module = {} :: types.State
+local module = {
+    _lastValue = 0,
+    value = 0
+} :: types.State
+
+local function isEqual(v1, v2)
+    if typeof(v1) ~= typeof(v2) then
+        return false
+    end
+
+    local t = nil
+    t = {
+        table = function(val1, val2)
+            local bool = true
+            local indexs = {}
+
+            for i, v in val1 do
+                indexs[i] = v
+            end
+
+            for i, v in val2 do
+                indexs[i] = v
+            end
+
+            for i, v in indexs do
+                bool = if t[typeof(v)] then t[typeof(v)](val1[i], val2[i]) else t["default"](val1[i], val2[i])
+            end
+
+            return bool
+        end,
+
+        default = function(val1, val2)
+            return val1 == val2
+        end
+    }
+
+    return if t[typeof(v1)] then t[typeof(v1)](v1, v2) else t["default"](v1, v2)
+end
+
+local function DeepClone(val)
+    local t = nil
+    t = {
+        table = function(val)
+            local new = {}
+
+            for i, v in val do
+                new[i] = if t[typeof(v)] then t[typeof(v)](v) else t["default"](v)
+            end
+
+            return new
+        end,
+
+        default = function(val)
+            return val
+        end
+    }
+
+    return if t[typeof(val)] then t[typeof(val)](val) else t["default"](val)
+end
 
 function module:__newindex(key, value)
+    if module[key] then
+        if typeof(module[key]) == "function" then
+            return rawget(self, key)(self, value)
+
+        else
+            rawset(self, key, value)
+            return
+        end
+    end
+
     if rawget(self, "_methods")[key] or module[key] then
         if typeof(module[key]) == "function" then
             return self[key](self, value)
 
-        elseif rawget(self, "_methods")[key] then
+        elseif rawget(module, key) then
             rawset(self, key, value)
             return
         end
     end
 
     rawset(rawget(self, "_methods"), key, function(self: types.State, ...)
-        local _lastValue = self.value
+        local _lastValue = if config.CLONE_VALUE_TO_LAST_VALUE then DeepClone(self.value) else self.value
 
         local success, errorMessage = pcall(value, self, ...)
 
@@ -29,7 +97,7 @@ function module:__newindex(key, value)
             end)
         end
 
-        if self.value ~= _lastValue then
+        if not config.CHECK_IS_EQUAL_BEFORE_UPDATE or not isEqual(self.value, _lastValue) then
             self._lastValue = _lastValue
 
             self._signal:Fire(self.value, self._lastValue)
@@ -43,7 +111,7 @@ function module:__index(key)
         return rawget(self, "_methods")[key]
     end
 
-    return module[key]
+    return if typeof(module[key]) == "function" then module[key] else rawget(self, key)
 end
 
 function module:GetValue()
