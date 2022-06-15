@@ -1,6 +1,6 @@
 [package]
 name = "ocipa/accord"
-version = "0.5.1"
+version = "0.5.3"
 license = "MIT"
 authors = ["Ocipa <ocipamail@gmail.com>"]
 registry = "https://github.com/UpliftGames/wally-index"
@@ -8,6 +8,3 @@ realm = "shared"
 
 [dependencies]
 fastsignal = "lucasmzreal/fastsignal@10.1.0"
-
-[dev-dependencies]
-testez = "roblox/testez@0.4.1"

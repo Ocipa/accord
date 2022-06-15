@@ -1,0 +1,38 @@
+{
+  "name": "accord",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+
+      "accord": {
+        "$path": "src"
+      },
+
+      "Packages": {
+        "$path": "Packages"
+      },
+
+      "modules": {
+        "$path": "modules"
+      }
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+
+      "$path": "test"
+    },
+
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+
+        "$path": "client"
+      }
+    }
+  }
+}
