@@ -1,6 +1,6 @@
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local signal = require(replicatedStorage.Packages.fastsignal)
+local signal = require(script.Parent.Parent.fastsignal)
 
 
 export type Accord = {

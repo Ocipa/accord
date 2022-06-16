@@ -1,6 +1,6 @@
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
-local signal = require(replicatedStorage.Packages.fastsignal)
+local signal = require(script.Parent.Parent.fastsignal)
 
 local types = require(script.Parent.types)
 local config = require(script.Parent.config)
@@ -18,6 +18,10 @@ local function isEqual(v1, v2)
     local t = nil
     t = {
         table = function(val1, val2)
+            if typeof(val1) ~= typeof(val2) then
+                return false
+            end
+
             local bool = true
             local indexs = {}
 
@@ -31,6 +35,10 @@ local function isEqual(v1, v2)
 
             for i, v in indexs do
                 bool = if t[typeof(v)] then t[typeof(v)](val1[i], val2[i]) else t["default"](val1[i], val2[i])
+
+                if not bool then
+                    return false
+                end
             end
 
             return bool

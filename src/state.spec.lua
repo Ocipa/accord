@@ -191,6 +191,26 @@ return function()
             expect(num).to.equal(1)
         end)
 
+        it("table and empty table", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, {})
+
+            accord[name].set = function(self, tble)
+                self.value = tble
+            end
+
+            local num = 0
+            local connection = accord[name]:Connect(function()
+                num += 1
+            end)
+
+            expect(num).to.equal(0)
+            accord[name]:set({{"a"}, {"b"}})
+            expect(num).to.equal(1)
+            accord[name]:set({{"a"}, {"b"}})
+            expect(num).to.equal(1)
+        end)
+
         it("function", function()
             local name = tostring(random:NextNumber())
             accord:NewState(name, function() end)
