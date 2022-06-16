@@ -58,6 +58,12 @@ function module:DestroyState(stateName)
     return nil
 end
 
+function module:DestroyAll()
+    for i, _ in pairs(self.data) do
+        self:DestroyState(i)
+    end
+end
+
 return setmetatable(module, {
     __index = function(self, key)
         return module.data[key]

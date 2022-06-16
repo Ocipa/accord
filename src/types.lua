@@ -20,7 +20,8 @@ export type Accord = {
         callback: (stateName: string, value: any?, lastValue: any?) -> nil
     ) -> nil,
     DisconnectAll: (self: Accord) -> nil,
-    DestroyState: (self: Accord, stateName: string) -> nil
+    DestroyState: (self: Accord, stateName: string) -> nil,
+    DestroyAll: (self: Accord) -> nil
 }
 
 

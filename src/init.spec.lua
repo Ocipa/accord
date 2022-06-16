@@ -57,18 +57,35 @@ return function()
         end)
     end)
 
-    it("destroy state", function()
-        local name1 = tostring(random:NextNumber())
-        local name2 = tostring(random:NextNumber())
-        accord:NewState(name1, 0)
-        accord:NewState(name2, 0)
+    describe("destroy", function()
+        it("destroy state", function()
+            local name1 = tostring(random:NextNumber())
+            local name2 = tostring(random:NextNumber())
+            accord:NewState(name1, 0)
+            accord:NewState(name2, 0)
+    
+            expect(accord[name1]).to.be.ok()
+            expect(accord[name2]).to.be.ok()
+    
+            accord:DestroyState(name1)
+    
+            expect(accord[name1]).never.to.be.ok()
+            expect(accord[name2]).to.be.ok()
+        end)
 
-        expect(accord[name1]).to.be.ok()
-        expect(accord[name2]).to.be.ok()
-
-        accord:DestroyState(name1)
-
-        expect(accord[name1]).never.to.be.ok()
-        expect(accord[name2]).to.be.ok()
+        it("destroy all", function()
+            local name1 = tostring(random:NextNumber())
+            local name2 = tostring(random:NextNumber())
+            accord:NewState(name1, 0)
+            accord:NewState(name2, 0)
+    
+            expect(accord[name1]).to.be.ok()
+            expect(accord[name2]).to.be.ok()
+    
+            accord:DestroyAll()
+    
+            expect(accord[name1]).never.to.be.ok()
+            expect(accord[name2]).never.to.be.ok()
+        end)
     end)
 end

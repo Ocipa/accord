@@ -3,6 +3,14 @@
   "tree": {
     "$className": "DataModel",
 
+    "Players": {
+      "$className": "Players",
+
+      "$properties": {
+        "CharacterAutoLoads": false
+      }
+    },
+
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
 
@@ -21,16 +29,6 @@
       "$className": "ServerScriptService",
 
       "$path": "test"
-    },
-
-    "StarterPlayer": {
-      "$className": "StarterPlayer",
-
-      "StarterPlayerScripts": {
-        "$className": "StarterPlayerScripts",
-
-        "$path": "client"
-      }
     }
   }
 }

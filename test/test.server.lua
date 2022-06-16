@@ -9,7 +9,6 @@ local result = testEz.TestBootstrap:run(
     testEz.Reporters.TextReporter
 )
 
-print(result)
-
 local accord = require(replicatedStorage.accord)
-print("accord: ", accord)
+print("accord after tests: ", accord)
+accord:DestroyAll()
