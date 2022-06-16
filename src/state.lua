@@ -122,22 +122,75 @@ function module:__index(key)
     return if typeof(module[key]) == "function" then module[key] else rawget(self, key)
 end
 
+
+--[[
+    Gets the value of the state.
+
+    ```lua
+    accord.Balance:GetValue()
+    ```
+]]
+---@return any
 function module:GetValue()
     return self.value
 end
 
+
+--[[
+    Connects a callback to when the state value changes.
+
+    ```lua
+    accord.Balance:Connect(function(value, lastValue)
+        print(("Balance changed from %s to %s"):format(lastValue, value))
+    end)
+    ```
+]]
+---@param callback fun()
+---@return any
 function module:Connect(callback)
     return self._signal:Connect(callback)
 end
 
+
+--[[
+    Connects a callback to when the state value changes once.
+
+    ```lua
+    accord.Balance:ConnectOnce(function(value, lastValue)
+        print(("Balance changed from %s to %s"):format(lastValue, value))
+    end)
+    ```
+]]
+---@param callback fun()
+---@return any
 function module:ConnectOnce(callback)
     return self._signal:ConnectOnce(callback)
 end
 
+
+--[[
+    Disconnects all connections to the state.
+
+    ```lua
+    accord.Balance:DisconnectAll()
+    ```
+]]
+---@return nil
 function module:DisconnectAll()
     self._signal:DisconnectAll()
+
+    return nil
 end
 
+
+--[[
+    Destroys the state, disconnecting the connections and removing the value.
+
+    ```lua
+    accord.Balance:Destroy()
+    ```
+]]
+---@return nil
 function module:Destroy()
     -- NOTE: destroy the state from accord so that accord's index of this state
     -- is also removed

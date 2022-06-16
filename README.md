@@ -6,29 +6,57 @@
 
 ## API
 
-`Accord:NewState(stateName: string, defaultValue: any): State`
+`Accord`
+```lua
+Accord:NewState(stateName: string, defaultValue: any): State
+-- Creates a new state.
+```
+```lua
+Accord:GetState(stateName: string): State
+-- Gets the state.
+```
+```lua
+Accord:Connect(callback: (stateName: string, value: any?, lastValue: any?): nil): signal.ScriptConnection
+-- Connects a callback to when any state value changes.
+```
+```lua
+Accord:ConnectOnce(callback: (stateName: string, value: any?, lastValue: any?): nil): nil
+-- Connects a callback to when any state value changes once.
+```
+```lua
+Accord:DisconnectAll(): nil
+-- Disconnects all connections to accord.
+```
+```lua
+Accord:DestroyState(stateName: string): nil
+-- Destroys a state, disconnecting the connections and removing the value.
+```
+```lua
+Accord:DestroyAll(): nil
+-- Destroys all states, disconnecting the connections and removing the values.
+```
 
-`Accord:GetState(stateName: string): State`
-
-`Accord:Connect(callback: (stateName: string, value: any?, lastValue: any?): nil): signal.ScriptConnection`
-
-`Accord:ConnectOnce(callback: (stateName: string, value: any?, lastValue: any?): nil): nil`
-
-`Accord:DisconnectAll(): nil`
-
-`Accord:DestroyState(stateName: string): nil`
-
----
-
-`State:GetValue(): any?`
-
-`State:Connect(callback: (value: any?, lastValue: any?): nil): signal.ScriptConnection`
-
-`State:ConnectOnce(callback: (value: any?, lastValue: any?): nil): nil`
-
-`State:DisconnectAll(): nil`
-
-`State:Destroy(): nil`
+`State`
+```lua
+State:GetValue(): any?
+-- Gets the value of the state.
+```
+```lua
+State:Connect(callback: (value: any?, lastValue: any?): nil): signal.ScriptConnection
+-- Connects a callback to when the state value changes.
+```
+```lua
+State:ConnectOnce(callback: (value: any?, lastValue: any?): nil): nil
+-- Connects a callback to when the state value changes once.
+```
+```lua
+State:DisconnectAll(): nil
+-- Disconnects all connections to the state.
+```
+```lua
+State:Destroy(): nil
+-- Destroys the state, disconnecting the connections and removing the value.
+```
 
 
 
