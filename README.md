@@ -1,6 +1,71 @@
 <h1 align="center">accord</h1>
 <div align="center">⚠️Repo is in development, EVERYTHING is subject to change⚠️</div>
 
+<br>
+<div style="-webkit-column-count: 2; -moz-column-count: 2; column-count: 2;">
+<div align="center"><h3>accord</h3></div>
+<pre><code class="lang-lua"><span class="hljs-keyword">local</span> accord = <span class="hljs-built_in">require</span>(accord)
+<nl>
+accord:NewState(<span class="hljs-string">"balance"</span>, <span class="hljs-number">0</span>)
+<nl>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">accord.balance:Inc</span><span class="hljs-params">()</span></span>
+    self.value += <span class="hljs-number">1</span>
+<span class="hljs-keyword">end</span>
+<nl>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">accord.balance:Dec</span><span class="hljs-params">()</span></span>
+    self.value -= <span class="hljs-number">1</span>
+<span class="hljs-keyword">end</span>
+<nl>
+accord.balance:GetValue() <span class="hljs-comment">-- 0</span>
+<nl>
+accord.balance:Inc()
+accord.balance:GetValue() <span class="hljs-comment">-- 1</span>
+<nl>
+accord.balance:Dec()
+accord.balance:GetValue() <span class="hljs-comment">-- 0</span>
+<nl>
+<nl>
+<nl>
+<nl>
+<nl>
+<nl>
+<nl>
+<nl>
+<nl>
+<nl>
+</code></pre>
+<div align="center"><h3>rodux</h3></div>
+<pre><code class="lang-lua">local rodux = rquire(rodux)
+<nl>
+local function reducer(<span class="hljs-keyword">state</span>, action)
+    <span class="hljs-keyword">state</span> = <span class="hljs-keyword">state</span> or {
+        balance = <span class="hljs-number">0</span>
+    }
+    <nl>
+    if action.type == <span class="hljs-string">"inc"</span> then
+        return {balance = <span class="hljs-keyword">state</span>.balance + <span class="hljs-number">1</span>}
+    <nl>
+    elseif action.type == <span class="hljs-string">"dec"</span> then
+        return {balance = <span class="hljs-keyword">state</span>.balance - <span class="hljs-number">1</span>}
+    end
+    <nl>
+    return <span class="hljs-keyword">state</span>
+end
+<nl>
+local store = rodux.Store.new(reducer)
+store:getState() -- {balance = <span class="hljs-number">0</span>}
+<nl>
+store:dispatch({
+    type = <span class="hljs-string">"inc"</span>
+})
+store:getState() -- {balance = <span class="hljs-number">1</span>}
+<nl>
+store:dispatch({
+    type = <span class="hljs-string">"dec"</span>
+})
+store:getState() -- {balance = <span class="hljs-number">0</span>}
+</code></pre>
+</div>
 
 
 
