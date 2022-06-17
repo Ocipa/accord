@@ -13,7 +13,7 @@ return function()
         local name = tostring(random:NextNumber())
         local value = random:NextNumber()
         accord:NewState(name, value)
-        expect(accord[name].value).to.equal(value)
+        expect(accord[name]:GetValue()).to.equal(value)
     end)
 
     describe("value change method", function()
@@ -41,8 +41,8 @@ return function()
             end
             accord[name]:test(value)
 
-            expect(accord[name]._history[1].Value).to.equal(0)
-            expect(accord[name].value).to.equal(value)
+            expect(accord[name]:GetLastValue()).to.equal(0)
+            expect(accord[name]:GetValue()).to.equal(value)
         end)
     end)
 
@@ -87,6 +87,36 @@ return function()
             accord[name]:DisconnectAll()
             expect(accord[name]._signal._head).never.to.be.ok()
             expect(connection and connection.Connected).never.to.equal(true)
+        end)
+    end)
+
+    describe("get value", function()
+        it("GetValue", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            expect(accord[name]:GetValue()).to.equal(0)
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(1)
+        end)
+
+        it("GetLastValue", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            expect(accord[name]:GetLastValue()).to.equal(0)
+            accord[name]:inc()
+            expect(accord[name]:GetLastValue()).to.equal(0)
+            accord[name]:inc()
+            expect(accord[name]:GetLastValue()).to.equal(1)
         end)
     end)
 
@@ -269,6 +299,173 @@ return function()
             expect(num).to.equal(1)
             accord[name]:set(accord[name]:GetValue())
             expect(num).to.equal(1)
+        end)
+    end)
+
+    describe("relative rescind", function()
+        it("go back in history", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(5)
+
+            accord[name]:RelativeRescind(-3)
+            expect(accord[name]:GetValue()).to.equal(2)
+        end)
+
+        it("go forward in history", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(5)
+
+            accord[name]:RelativeRescind(-3)
+            expect(accord[name]:GetValue()).to.equal(2)
+
+            accord[name]:RelativeRescind(2)
+            expect(accord[name]:GetValue()).to.equal(4)
+        end)
+
+        it("go back to value", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(5)
+
+            accord[name]:RelativeRescind(-3)
+            expect(accord[name]:GetValue()).to.equal(2)
+
+            accord[name]:RelativeRescind()
+            expect(accord[name]:GetValue()).to.equal(5)
+        end)
+
+        it("go -999 into the history", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(5)
+
+            accord[name]:RelativeRescind(-999)
+            expect(accord[name]:GetValue()).to.equal(0)
+        end)
+
+        it("go 999 into the history", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(5)
+
+            accord[name]:RelativeRescind(-3)
+            expect(accord[name]:GetValue()).to.equal(2)
+
+            accord[name]:RelativeRescind(999)
+            expect(accord[name]:GetValue()).to.equal(5)
+        end)
+
+        it("get value in the middle of history", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(5)
+
+            accord[name]:RelativeRescind(-3)
+            expect(accord[name]:GetValue()).to.equal(2)
+        end)
+
+        it("get last value in the middle of history", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(5)
+
+            accord[name]:RelativeRescind(-3)
+            expect(accord[name]:GetLastValue()).to.equal(1)
+        end)
+
+        it("override history", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0)
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:inc()
+            expect(accord[name]:GetValue()).to.equal(5)
+
+            accord[name]:RelativeRescind(-3)
+            expect(accord[name]:GetValue()).to.equal(2)
+
+            accord[name]:inc()
+            accord[name]:RelativeRescind()
+            expect(accord[name]:GetValue()).to.equal(3)
         end)
     end)
 

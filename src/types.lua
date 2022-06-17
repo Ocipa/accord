@@ -27,8 +27,11 @@ export type Accord = {
 
 export type State = {
     _stateName: string,
+
+    _historyIndex: number,
     _historySize: number,
     _history: {[number]: HistoryValue},
+
     value: any?,
     _signal: signal.Class,
     _methods: {[string]: (self: State, ...any) -> any},
@@ -38,6 +41,8 @@ export type State = {
     __index: (self: State, key: string) -> any?,
     __newindex: (self: State, key: string, value: any?) -> nil,
     GetValue: (self: State) -> any?,
+    GetLastValue: (self: State) -> any?,
+    RelativeRescind: (self:State, num: number?) -> nil,
     Connect: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> signal.ScriptConnection,
     ConnectOnce: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> nil,
     DisconnectAll: (self: State) -> nil,

@@ -62,6 +62,16 @@ State:GetValue(): any?
 -- Gets the value of the state.
 ```
 ```lua
+State:GetLastValue(): any?
+-- Gets the last value of the state.
+```
+```lua
+State:RelativeRescind(num: number): nil
+-- Rescinds the value of the state. If the num is negative, goes back in the
+-- value history, if num is positive, goes forward in value history, if nil,
+-- goes to the last history (the most recent value change).
+```
+```lua
 State:Connect(callback: (value: any?, lastValue: any?): nil): signal.ScriptConnection
 -- Connects a callback to when the state value changes.
 ```

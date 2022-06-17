@@ -86,8 +86,6 @@ function module:__newindex(key, value)
     end
 
     rawset(rawget(self, "_methods"), key, function(self: types.State, ...)
-        local _lastValue = DeepClone(self.value)
-
         local success, errorMessage = pcall(value, self, ...)
 
         if not success and not config["SILENCE_ERRORS"] then
@@ -96,26 +94,33 @@ function module:__newindex(key, value)
             end)
         end
 
-        if success and (not config.CHECK_IS_EQUAL_BEFORE_UPDATE or not isEqual(self.value, _lastValue)) then
-            table.insert(self._history, 1, {
-                Size = #HttpService:JSONEncode(_lastValue),
-                Value = _lastValue
+        local CHECK_EQUAL = config.CHECK_IS_EQUAL_BEFORE_UPDATE
+        if success and (not CHECK_EQUAL or not isEqual(self.value, self._history[self._historyIndex].Value)) then
+            table.insert(self._history, self._historyIndex, {
+                Size = if self.value then #HttpService:JSONEncode(self.value) else 0,
+                Value = DeepClone(self.value)
             } :: types.HistoryValue)
 
-            self._historySize += self._history[1].Size
+            self._historySize += self._history[self._historyIndex].Size
 
-            while #self._history > math.max(config.MAX_HISTORY_LENGTH, 1) do
+            for i=self._historyIndex - 1, 1, -1 do
+                self._historySize -= self._history[i].Size
+                table.remove(self._history, i)
+            end
+            self._historyIndex = 1
+
+            while #self._history > math.max(config.MAX_HISTORY_LENGTH, 2) do
                 self._historySize -= self._history[#self._history].Size
                 table.remove(self._history, #self._history)
             end
 
-            while self._historySize > config.MAX_HISTORY_SIZE and #self._history > 1 do
+            while self._historySize > config.MAX_HISTORY_SIZE and #self._history > 2 do
                 self._historySize -= self._history[#self._history].Size
                 table.remove(self._history, #self._history)
             end
 
-            self._signal:Fire(self.value, self._history[1].Value)
-            require(script.Parent)._signal:Fire(self._stateName, self.value, self._history[1].Value)
+            self._signal:Fire(self:GetValue(), self:GetLastValue())
+            require(script.Parent)._signal:Fire(self._stateName, self:GetValue(), self:GetLastValue())
         end
     end)
 end
@@ -138,7 +143,59 @@ end
 ]]
 ---@return any
 function module:GetValue()
-    return self.value
+    return self._history[self._historyIndex].Value
+end
+
+
+--[[
+    Gets the last value of the state.
+
+    ```lua
+    accord.Balance:GetLastValue()
+    ```
+]]
+---@return any
+function module:GetLastValue()
+    return self._history[math.clamp(self._historyIndex + 1, 1, #self._history)].Value
+end
+
+
+--[[
+    Rescinds the value of the state. If the num is negative, goes back in the\
+    value history, if num is positive, goes forward in value history, if nil,\
+    goes to the last history (the most recent value change).
+
+    ```lua
+    function accord.balance:Inc()
+        self.value += 2
+    end
+
+    accord.balance:Inc() -- balance = 2
+    accord.balance:Inc() -- balance = 4
+    accord.balance:Inc() -- balance = 6
+
+    accord.balance:RelativeRescind(-2) -- balance = 2
+    accord.balance:RelativeRescind() -- balance = 6
+    ```
+]]
+---@param num number | nil
+function module:RelativeRescind(num)
+    assert(
+        typeof(num) == "number" or typeof(num) == "nil",
+        ("[ERROR]: state RelativeRescind: expected num to be of type number or nil, got %s"):format(typeof(num))
+    )
+
+    if num == 0 then return end
+
+    if not num then
+        self._historyIndex = 1
+
+    else
+        self._historyIndex = math.clamp(self._historyIndex - num, 1, #self._history)
+    end
+
+    self.value = DeepClone(self:GetValue())
+    return
 end
 
 
@@ -210,8 +267,13 @@ function module._new(stateName, defaultValue)
 
     rawset(self, "_stateName", stateName)
 
+    rawset(self, "_historyIndex", 1)
     rawset(self, "_historySize", #HttpService:JSONEncode(defaultValue))
-    rawset(self, "_history", {defaultValue})
+    rawset(self, "_history", {{
+        Size = if defaultValue then #HttpService:JSONEncode(defaultValue) else 0,
+        Value = defaultValue
+    }})
+
     rawset(self, "value", defaultValue)
 
     rawset(self, "_signal", signal.new())
