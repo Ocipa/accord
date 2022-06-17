@@ -1,3 +1,4 @@
+local HttpService = game:GetService("HttpService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local signal = require(script.Parent.Parent.fastsignal)
@@ -84,18 +85,8 @@ function module:__newindex(key, value)
         end
     end
 
-    if rawget(self, "_methods")[key] or module[key] then
-        if typeof(module[key]) == "function" then
-            return self[key](self, value)
-
-        elseif rawget(module, key) then
-            rawset(self, key, value)
-            return
-        end
-    end
-
     rawset(rawget(self, "_methods"), key, function(self: types.State, ...)
-        local _lastValue = if config.CLONE_VALUE_TO_LAST_VALUE then DeepClone(self.value) else self.value
+        local _lastValue = DeepClone(self.value)
 
         local success, errorMessage = pcall(value, self, ...)
 
@@ -105,11 +96,26 @@ function module:__newindex(key, value)
             end)
         end
 
-        if not config.CHECK_IS_EQUAL_BEFORE_UPDATE or not isEqual(self.value, _lastValue) then
-            self._lastValue = _lastValue
+        if success and (not config.CHECK_IS_EQUAL_BEFORE_UPDATE or not isEqual(self.value, _lastValue)) then
+            table.insert(self._history, 1, {
+                Size = #HttpService:JSONEncode(_lastValue),
+                Value = _lastValue
+            } :: types.HistoryValue)
 
-            self._signal:Fire(self.value, self._lastValue)
-            require(script.Parent)._signal:Fire(self._stateName, self.value, self._lastValue)
+            self._historySize += self._history[1].Size
+
+            while #self._history > math.max(config.MAX_HISTORY_LENGTH, 1) do
+                self._historySize -= self._history[#self._history].Size
+                table.remove(self._history, #self._history)
+            end
+
+            while self._historySize > config.MAX_HISTORY_SIZE and #self._history > 1 do
+                self._historySize -= self._history[#self._history].Size
+                table.remove(self._history, #self._history)
+            end
+
+            self._signal:Fire(self.value, self._history[1].Value)
+            require(script.Parent)._signal:Fire(self._stateName, self.value, self._history[1].Value)
         end
     end)
 end
@@ -204,7 +210,8 @@ function module._new(stateName, defaultValue)
 
     rawset(self, "_stateName", stateName)
 
-    rawset(self, "_lastValue", defaultValue)
+    rawset(self, "_historySize", #HttpService:JSONEncode(defaultValue))
+    rawset(self, "_history", {defaultValue})
     rawset(self, "value", defaultValue)
 
     rawset(self, "_signal", signal.new())

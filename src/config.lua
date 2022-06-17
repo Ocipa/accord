@@ -13,10 +13,16 @@ local config: types.Config =  {
     CHECK_IS_EQUAL_BEFORE_UPDATE = true,
 
     --[=[
-        clones the value to last value before running the value change method\
-        (consider changing to false if a state is a large table)
+        max number of indices in value history, must be greater than or equal\
+        to 1
     ]=]
-    CLONE_VALUE_TO_LAST_VALUE = true
+    MAX_HISTORY_LENGTH = 5000,
+
+    --[=[
+        the max size of value history after being json encoded, ignored if\
+        value history has 1 or less index
+    ]=]
+    MAX_HISTORY_SIZE = 1000
 }
 
 return config

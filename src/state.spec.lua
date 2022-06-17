@@ -41,7 +41,7 @@ return function()
             end
             accord[name]:test(value)
 
-            expect(accord[name]._lastValue).to.equal(0)
+            expect(accord[name]._history[1].Value).to.equal(0)
             expect(accord[name].value).to.equal(value)
         end)
     end)

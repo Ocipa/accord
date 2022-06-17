@@ -27,7 +27,8 @@ export type Accord = {
 
 export type State = {
     _stateName: string,
-    _lastValue: any?,
+    _historySize: number,
+    _history: {[number]: HistoryValue},
     value: any?,
     _signal: signal.Class,
     _methods: {[string]: (self: State, ...any) -> any},
@@ -48,7 +49,13 @@ export type State = {
 export type Config = {
     SILENCE_ERRORS: boolean,
     CHECK_IS_EQUAL_BEFORE_UPDATE: boolean,
-    CLONE_VALUE_TO_LAST_VALUE: boolean
+    MAX_HISTORY_LENGTH: number,
+    MAX_HISTORY_SIZE:number
+}
+
+export type HistoryValue = {
+    Size: number,
+    Value: any?
 }
 
 
