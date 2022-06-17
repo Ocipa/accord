@@ -119,8 +119,8 @@ function module:__newindex(key, value)
                 table.remove(self._history, #self._history)
             end
 
-            self._signal:Fire(self:GetValue(), self:GetLastValue())
-            require(script.Parent)._signal:Fire(self._stateName, self:GetValue(), self:GetLastValue())
+            self._signal:Fire(self:GetValue())
+            require(script.Parent)._signal:Fire(self._stateName, self:GetValue())
         end
     end)
 end

@@ -16,10 +16,9 @@ return function()
                 self.value += 1
             end
 
-            accord:Connect(function(stateName, value, lastValue)
+            accord:Connect(function(stateName, value)
                 if stateName == name then
                     expect(value).to.equal(1)
-                    expect(lastValue).to.equal(0)
                 end
             end)
 
@@ -34,10 +33,9 @@ return function()
                 self.value += 1
             end
 
-            accord:ConnectOnce(function(stateName, value, lastValue)
+            accord:ConnectOnce(function(stateName, value)
                 if stateName == name then
                     expect(value).to.equal(1)
-                    expect(lastValue).to.equal(0)
                 end
             end)
 

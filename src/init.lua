@@ -46,8 +46,8 @@ end
     Connects a callback to when any state value changes.
 
     ```lua
-    accord:Connect(function(stateName, value, lastValue)
-        print(("%s changed from %s to %s"):format(stateName, lastValue, value))
+    accord:Connect(function(stateName, value)
+        print(("%s changed to %s"):format(stateName, value))
     end)
     ```
 ]]
@@ -62,8 +62,8 @@ end
     Connects a callback to when any state value changes once.
 
     ```lua
-    accord:ConnectOnce(function(stateName, value, lastValue)
-        print(("%s changed from %s to %s"):format(stateName, lastValue, value))
+    accord:ConnectOnce(function(stateName, value)
+        print(("%s changed to %s"):format(stateName, value))
     end)
     ```
 ]]

@@ -36,11 +36,11 @@ Accord:GetState(stateName: string): State
 -- Gets the state.
 ```
 ```lua
-Accord:Connect(callback: (stateName: string, value: any?, lastValue: any?): nil): signal.ScriptConnection
+Accord:Connect(callback: (stateName: string, value: any?): nil): signal.ScriptConnection
 -- Connects a callback to when any state value changes.
 ```
 ```lua
-Accord:ConnectOnce(callback: (stateName: string, value: any?, lastValue: any?): nil): nil
+Accord:ConnectOnce(callback: (stateName: string, value: any?): nil): nil
 -- Connects a callback to when any state value changes once.
 ```
 ```lua
@@ -72,11 +72,11 @@ State:RelativeRescind(num: number): nil
 -- goes to the last history (the most recent value change).
 ```
 ```lua
-State:Connect(callback: (value: any?, lastValue: any?): nil): signal.ScriptConnection
+State:Connect(callback: (value: any?): nil): signal.ScriptConnection
 -- Connects a callback to when the state value changes.
 ```
 ```lua
-State:ConnectOnce(callback: (value: any?, lastValue: any?): nil): nil
+State:ConnectOnce(callback: (value: any?): nil): nil
 -- Connects a callback to when the state value changes once.
 ```
 ```lua
@@ -103,8 +103,8 @@ function accord.TestState:TestMethod(number: number)
     self.value += number
 end
 
-accord.TestState:Connect(function(value, lastValue)
-    print(("changed TestState from %s, to %s"):format(lastValue, value))
+accord.TestState:Connect(function(value)
+    print(("changed TestState from %s, to %s"):format(accord.TestState:GetLastValue(), value))
 end)
 
 accord.TestState:TestMethod(4)
@@ -124,7 +124,7 @@ function accord.SomeState:Concat(other: string)
     self.value = self.value .. other
 end
 
-accord.SomeState:ConnectOnce(function(value, lastValue)
+accord.SomeState:ConnectOnce(function(value)
     print(("%s"):format(value))
 end)
 
