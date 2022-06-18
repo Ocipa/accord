@@ -9,16 +9,16 @@ export type Accord = {
     _signal: signal.Class,
 
     __index: Accord,
-    NewState: (self: Accord, stateName: string, defaultValue: any) -> State,
+    NewState: (self: Accord, stateName: string, defaultValue: any, config: Config?) -> State,
     GetState: (self: Accord, stateName: string) -> State,
     Connect: (
         self: Accord,
-        callback: (stateName: string, value: any?, lastValue: any?) -> nil
+        callback: (stateName: string, value: any?) -> nil
     ) -> signal.ScriptConnection,
     ConnectOnce: (
         self: Accord,
-        callback: (stateName: string, value: any?, lastValue: any?) -> nil
-    ) -> nil,
+        callback: (stateName: string, value: any?) -> nil
+    ) -> signal.ScriptConnection,
     DisconnectAll: (self: Accord) -> nil,
     DestroyState: (self: Accord, stateName: string) -> nil,
     DestroyAll: (self: Accord) -> nil
@@ -27,6 +27,7 @@ export type Accord = {
 
 export type State = {
     _stateName: string,
+    _config: Config,
 
     _historyIndex: number,
     _historySize: number,
@@ -43,19 +44,19 @@ export type State = {
     GetValue: (self: State) -> any?,
     GetLastValue: (self: State) -> any?,
     RelativeRescind: (self:State, num: number?) -> nil,
-    Connect: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> signal.ScriptConnection,
-    ConnectOnce: (self: State, callback: (value: any?, lastValue: any?) -> nil) -> nil,
+    Connect: (self: State, callback: (value: any?) -> nil) -> signal.ScriptConnection,
+    ConnectOnce: (self: State, callback: (value: any?) -> nil) -> signal.ScriptConnection,
     DisconnectAll: (self: State) -> nil,
     Destroy: (self: State) -> nil,
-    _new: (stateName: string, defaultValue: any?) -> State
+    _new: (stateName: string, defaultValue: any?, config: Config?) -> State
 }
 
 
 export type Config = {
-    SILENCE_ERRORS: boolean,
-    CHECK_IS_EQUAL_BEFORE_UPDATE: boolean,
-    MAX_HISTORY_LENGTH: number,
-    MAX_HISTORY_SIZE:number
+    SILENCE_ERRORS: boolean?,
+    CHECK_IS_EQUAL_BEFORE_UPDATE: boolean?,
+    MAX_HISTORY_LENGTH: number?,
+    MAX_HISTORY_SIZE: number?
 }
 
 export type HistoryValue = {

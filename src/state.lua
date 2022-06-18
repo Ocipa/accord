@@ -4,7 +4,6 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 local signal = require(script.Parent.Parent.fastsignal)
 
 local types = require(script.Parent.types)
-local config = require(script.Parent.config)
 
 local module = {
     _lastValue = 0,
@@ -88,13 +87,13 @@ function module:__newindex(key, value)
     rawset(rawget(self, "_methods"), key, function(self: types.State, ...)
         local success, errorMessage = pcall(value, self, ...)
 
-        if not success and not config["SILENCE_ERRORS"] then
+        if not success and not self._config["SILENCE_ERRORS"] then
             task.spawn(function()
                 error(errorMessage, 0)
             end)
         end
 
-        local CHECK_EQUAL = config.CHECK_IS_EQUAL_BEFORE_UPDATE
+        local CHECK_EQUAL = self._config.CHECK_IS_EQUAL_BEFORE_UPDATE
         if success and (not CHECK_EQUAL or not isEqual(self.value, self._history[self._historyIndex].Value)) then
             table.insert(self._history, self._historyIndex, {
                 Size = if self.value then #HttpService:JSONEncode(self.value) else 0,
@@ -109,12 +108,12 @@ function module:__newindex(key, value)
             end
             self._historyIndex = 1
 
-            while #self._history > math.max(config.MAX_HISTORY_LENGTH, 2) do
+            while #self._history > math.max(self._config.MAX_HISTORY_LENGTH, 2) do
                 self._historySize -= self._history[#self._history].Size
                 table.remove(self._history, #self._history)
             end
 
-            while self._historySize > config.MAX_HISTORY_SIZE and #self._history > 2 do
+            while self._historySize > self._config.MAX_HISTORY_SIZE and #self._history > 2 do
                 self._historySize -= self._history[#self._history].Size
                 table.remove(self._history, #self._history)
             end
@@ -203,13 +202,13 @@ end
     Connects a callback to when the state value changes.
 
     ```lua
-    accord.Balance:Connect(function(value, lastValue)
-        print(("Balance changed from %s to %s"):format(lastValue, value))
+    accord.Balance:Connect(function(value)
+        print(("Balance changed to %s"):format(value))
     end)
     ```
 ]]
 ---@param callback fun()
----@return any
+---@return ScriptConnection
 function module:Connect(callback)
     return self._signal:Connect(callback)
 end
@@ -219,13 +218,13 @@ end
     Connects a callback to when the state value changes once.
 
     ```lua
-    accord.Balance:ConnectOnce(function(value, lastValue)
-        print(("Balance changed from %s to %s"):format(lastValue, value))
+    accord.Balance:ConnectOnce(function(value)
+        print(("Balance changed to %s"):format(value))
     end)
     ```
 ]]
 ---@param callback fun()
----@return any
+---@return ScriptConnection
 function module:ConnectOnce(callback)
     return self._signal:ConnectOnce(callback)
 end
@@ -262,10 +261,17 @@ function module:Destroy()
     return nil
 end
 
-function module._new(stateName, defaultValue)
+function module._new(stateName, defaultValue, config)
     local self = setmetatable({}, module) :: types.State
 
     rawset(self, "_stateName", stateName)
+
+    local _config = config or {}
+
+    for i, v in pairs(require(script.Parent.config)) do
+        _config[i] = if _config[i] ~= nil then _config[i] else v
+    end
+    rawset(self, "_config", _config)
 
     rawset(self, "_historyIndex", 1)
     rawset(self, "_historySize", #HttpService:JSONEncode(defaultValue))

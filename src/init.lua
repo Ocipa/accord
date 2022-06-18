@@ -20,9 +20,10 @@ module.__index = module
 ]]
 ---@param stateName string
 ---@param defaultValue any
+---@param config Config | nil
 ---@return State
-function module:NewState(stateName, defaultValue)
-    module.data[stateName] = require(script.state)._new(stateName, defaultValue)
+function module:NewState(stateName, defaultValue, config)
+    module.data[stateName] = require(script.state)._new(stateName, defaultValue, config)
 
     return module.data[stateName]
 end
@@ -68,7 +69,7 @@ end
     ```
 ]]
 ---@param callback fun()
----@return nil
+---@return ScriptConnection
 function module:ConnectOnce(callback)
     return self._signal:ConnectOnce(callback)
 end

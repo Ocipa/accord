@@ -86,4 +86,82 @@ return function()
             expect(accord[name2]).never.to.be.ok()
         end)
     end)
+
+    describe("local state config", function()
+
+        --[[
+            can't test config["SILENCE_ERRORS"] since the errors are caught
+            before TestEz expect() can catch them
+        --]]
+
+        it("CHECK_IS_EQUAL_BEFORE_UPDATE is true", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0, {["CHECK_IS_EQUAL_BEFORE_UPDATE"] = true})
+
+            accord[name].inc = function(self, num)
+                self.value += num
+            end
+
+            local num = 0
+            accord[name]:Connect(function(value)
+                print(5)
+                num += 1
+            end)
+
+            accord[name]:inc(1)
+            expect(num).to.equal(1)
+            accord[name]:inc(0)
+            expect(num).to.equal(1)
+            expect(accord[name]:GetValue()).to.equal(1)
+        end)
+
+        it("CHECK_IS_EQUAL_BEFORE_UPDATE is false", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0, {["CHECK_IS_EQUAL_BEFORE_UPDATE"] = false})
+
+            accord[name].inc = function(self, num)
+                self.value += num
+            end
+
+            local num = 0
+            accord[name]:Connect(function(value)
+                print(5)
+                num += 1
+            end)
+
+            accord[name]:inc(1)
+            expect(num).to.equal(1)
+            accord[name]:inc(0)
+            expect(num).to.equal(2)
+            expect(accord[name]:GetValue()).to.equal(1)
+        end)
+
+        it("MAX_HISTORY_LENGTH", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0, {["MAX_HISTORY_LENGTH"] = 0})
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:RelativeRescind(-2)
+            expect(accord[name]:GetValue()).to.equal(1)
+        end)
+
+        it("MAX_HISTORY_SIZE", function()
+            local name = tostring(random:NextNumber())
+            accord:NewState(name, 0, {["MAX_HISTORY_SIZE"] = 0})
+
+            accord[name].inc = function(self)
+                self.value += 1
+            end
+
+            accord[name]:inc()
+            accord[name]:inc()
+            accord[name]:RelativeRescind(-2)
+            expect(accord[name]:GetValue()).to.equal(1)
+        end)
+    end)
 end

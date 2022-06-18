@@ -28,7 +28,7 @@ print(accord.balance:GetValue()) -- 2
 
 `Accord`
 ```lua
-Accord:NewState(stateName: string, defaultValue: any): State
+Accord:NewState(stateName: string, defaultValue: any, config: Config?): State
 -- Creates a new state.
 ```
 ```lua
