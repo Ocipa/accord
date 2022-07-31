@@ -1,3 +1,5 @@
+--!strict
+
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local signal = require(script.Parent.fastsignal)
@@ -6,7 +8,7 @@ local types = require(script.types)
 
 local module = {
     data = {},
-    _signal = signal.new()
+    _signal = signal.new() :: types.Signal & any
 } :: types.Accord
 module.__index = module
 
@@ -145,4 +147,4 @@ return setmetatable(module, {
     __index = function(self, key)
         return module.data[key]
     end
-}) :: types.Accord
+}) :: types.Accord & any
