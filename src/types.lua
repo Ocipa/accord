@@ -1,10 +1,6 @@
 --!strict
 
-local replicatedStorage = game:GetService("ReplicatedStorage")
-
-local signal = require(script.Parent.Parent.fastsignal)
-
-
+---@class Accord
 export type Accord = {
     [string]: State,
     data: {[string]: State},
@@ -27,6 +23,7 @@ export type Accord = {
 }
 
 
+---@class State
 export type State = {
     _stateName: string,
     _config: Config,
@@ -54,6 +51,7 @@ export type State = {
 }
 
 
+---@class Config
 export type Config = {
     SILENCE_ERRORS: boolean?,
     CHECK_IS_EQUAL_BEFORE_UPDATE: boolean?,
@@ -68,7 +66,7 @@ export type HistoryValue = {
 
 
 
-
+---@class Signal
 export type Signal = {
 	Connect: (self: Signal, handler: (...any) -> ()) -> Connection,
 	ConnectOnce: (self: Signal, handler: (...any) -> ()) -> Connection,
@@ -80,6 +78,7 @@ export type Signal = {
 	Destroy: (self: Signal) -> nil,
 }
 
+---@class Connection
 export type Connection = {
 	Disconnect: (self: Connection) -> nil
 }

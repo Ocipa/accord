@@ -213,7 +213,7 @@ end
     ```
 ]]
 ---@param callback fun()
----@return ScriptConnection
+---@return Connection
 function module:Connect(callback)
     return self._signal:Connect(callback)
 end
@@ -229,7 +229,7 @@ end
     ```
 ]]
 ---@param callback fun()
----@return ScriptConnection
+---@return Connection
 function module:ConnectOnce(callback)
     return self._signal:ConnectOnce(callback)
 end
