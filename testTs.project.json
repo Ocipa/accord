@@ -1,0 +1,34 @@
+{
+  "name": "accord",
+  "tree": {
+    "$className": "DataModel",
+
+    "Players": {
+      "$className": "Players",
+
+      "$properties": {
+        "CharacterAutoLoads": false
+      }
+    },
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+
+      "accord": {
+        "$path": "out"
+      },
+
+      "$path": "Packages",
+
+      "modules": {
+        "$path": "modules"
+      }
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+
+      "$path": "test"
+    }
+  }
+}

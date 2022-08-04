@@ -12,3 +12,8 @@
 /client
 
 wally.lock
+
+
+/out
+/node_modules
+/.vscode
