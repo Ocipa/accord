@@ -139,6 +139,50 @@ end
 
 
 --[[
+    Adds a method to the state.
+
+    ```lua
+    local addMethod = accord.Balance:AddMethod("Add", function(num: number)
+        self.value += num
+    end)
+
+    accord.Balance:Add(5) -- will not work in strict mode
+    addMethod(5) -- will work in strict mode
+    ```
+]]
+---@param methodName string
+---@param method function
+---@return function
+function module:AddMethod(methodName, method)
+    rawset(rawget(self :: any, "_methods"), methodName, method)
+
+    return function(...)
+        method(self, ...)
+    end
+end
+
+
+--[[
+    Calls a method of a state.
+
+    ```lua
+    accord.Balance:AddMethod("Add", function(num: number)
+        self.value += num
+    end)
+
+    accord.Balance:CallMethod("Add", 5)
+    ```
+]]
+---@param methodName string
+---@return nil
+function module:CallMethod(methodName, ...)
+    local method = rawget(rawget(self :: any, "_methods"), methodName)
+
+    method(self, ...)
+end
+
+
+--[[
     Gets the value of the state.
 
     ```lua

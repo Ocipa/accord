@@ -104,7 +104,6 @@ return function()
 
             local num = 0
             accord[name]:Connect(function(value)
-                print(5)
                 num += 1
             end)
 
@@ -125,7 +124,6 @@ return function()
 
             local num = 0
             accord[name]:Connect(function(value)
-                print(5)
                 num += 1
             end)
 

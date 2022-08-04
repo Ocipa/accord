@@ -16,6 +16,34 @@ return function()
         expect(accord[name]:GetValue()).to.equal(value)
     end)
 
+    it("add method", function()
+        local name = tostring(random:NextNumber())
+        accord:NewState(name, 0)
+
+        local method = accord[name]:AddMethod("Add", function(self, num: number)
+            self.value += num
+        end)
+
+        expect(accord[name]._methods["Add"]).to.never.equal(nil)
+
+        method(5)
+        expect(accord[name].value).to.equal(5)
+    end)
+
+    it("call method", function()
+        local name = tostring(random:NextNumber())
+        accord:NewState(name, 0)
+
+        local worked = false
+
+        accord[name].Add = function()
+            worked = true
+        end
+
+        accord[name]:CallMethod("Add")
+        expect(worked).to.equal(true)
+    end)
+
     describe("value change method", function()
         it("create", function()
             local name = tostring(random:NextNumber())

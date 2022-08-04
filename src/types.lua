@@ -40,6 +40,8 @@ export type State = {
 
     __index: (self: State, key: string) -> any?,
 	__newindex: (self: State, key: string, value: (...any) -> nil) -> nil,
+    AddMethod: (self: State, methodName: string, method: (state: State, ...any) -> nil) -> (...any) -> nil,
+    CallMethod: (self: State, methodName: string, ...any) -> nil,
     GetValue: (self: State) -> any?,
     GetLastValue: (self: State) -> any?,
     RelativeRescind: (self:State, num: number?) -> nil,
