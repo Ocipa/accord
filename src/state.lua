@@ -7,9 +7,7 @@ local signal = require(script.Parent.Parent.fastsignal)
 
 local types = require(script.Parent.types)
 
-local module = {
-    _value = nil
-}
+local module = {}
 
 function module:AddMethod(methodName: string, callback: (...any) -> nil): nil
     rawset(self, methodName, function(...)
