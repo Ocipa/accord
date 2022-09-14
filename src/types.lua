@@ -33,7 +33,13 @@ export type Accord = {
 }
 
 export type State<T> = {
-    value: T
+    value: T,
+
+    Get: (self: State<T>) -> T,
+}
+
+export type Methods<T> = {
+    [string]: (self: State<T>) -> nil
 }
 
 export type Config = {

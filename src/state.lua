@@ -7,9 +7,7 @@ local signal = require(script.Parent.Parent.fastsignal)
 
 local types = require(script.Parent.types)
 
-local module = {
-    value = 0
-} :: types.State
+-- local module = {}
 
 -- local function isEqual(v1, v2)
 --     if typeof(v1) ~= typeof(v2) then
@@ -339,23 +337,55 @@ local module = {
 -- end
 
 
-type State<T> = {
-    value: T
-}
-type Methods<T> = {
-    [string]: (self: State<T>) -> nil
+
+local module = {
+    _value = nil
 }
 
-local module = {}
+function module:AddMethod(methodName: string, callback: (...any) -> nil): nil
+    rawset(self, methodName, function(...)
+        rawset(self, "value", self._value)
 
-local function _new<T>(defaultValue: T, config)
-    local self = setmetatable({}, {__index = module})
+        local success, result = pcall(function(...)
+            callback(...)
 
+            rawset(self, "_value", self.value)
+            rawset(self, "value", nil)
+        end, ...)
 
+        if not success then
+            warn(result)
+        end
+    end)
+
+    return nil
 end
 
-return function<T>(defaultValue: T, config: types.Config?): <A>(methods: A | Methods<T>) -> types.State<T> & A
-    return function<A>(methods: A | Methods<T>): types.State<T> & A
-        
+function module:Get()
+    return self._value
+end
+
+local metamodule = {}
+metamodule.__index = module
+
+metamodule.__newindex = function(...)
+    print("---------:", ...)
+end
+
+local function _New<T, S>(defaultValue: T, methods, config: types.Config?)
+    local self = setmetatable({}, metamodule) :: types.State<T> & S & any
+
+    rawset(self, "_value", defaultValue)
+
+    for methodName, method in methods do
+        self:AddMethod(methodName, method)
+    end
+
+    return self
+end
+
+return function<T>(defaultValue: T, config: types.Config?)
+    return function<S>(methods: S | types.Methods<T>): types.State<T> & S
+        return _New(defaultValue, methods, config)
     end
 end
