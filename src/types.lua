@@ -34,7 +34,10 @@ export type Accord = {
 
 export type State<T> = {
     value: T,
+    config: Config,
 
+    Connect: (self: State<T>, callback: () -> nil) -> Connection,
+    ConnectOnce: (self: State<T>, callback: () -> nil) -> Connection,
     Get: (self: State<T>) -> T,
 }
 
@@ -46,7 +49,8 @@ export type Config = {
     SILENCE_ERRORS: boolean?,
     CHECK_IS_EQUAL_BEFORE_UPDATE: boolean?,
     MAX_HISTORY_LENGTH: number?,
-    MAX_HISTORY_SIZE: number?
+    MAX_HISTORY_SIZE: number?,
+    UPDATE_MODE: "Deferred" | "Immediate",
 }
 
 export type HistoryValue = {
