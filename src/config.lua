@@ -24,7 +24,11 @@ local config: types.Config =  {
         the max size of value history after being json encoded, ignored if\
         value history has 1 or less index
     ]=]
-    MAX_HISTORY_SIZE = 1000
+    MAX_HISTORY_SIZE = 1000,
+
+
+
+    UPDATE_MODE = "Deferred",
 }
 
 return config
