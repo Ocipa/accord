@@ -21,9 +21,8 @@ end
 function module:_Changed()
     if self._changed then return end
 
-    rawset(self, "_changed", true)
-
     if self.config["UPDATE_MODE"] == "Deferred" then
+        rawset(self, "_changed", true)
         task.defer(self._Fire, self)
 
     else
@@ -33,6 +32,14 @@ end
 
 function module:Connect(callback: (...any) -> nil)
     self._signal:Connect(callback)
+end
+
+function module:ConnectOnce(callback: (...any) -> nil)
+    self._signal:ConnectOnce(callback)
+end
+
+function module:DisconnectAll()
+    self._signal:DisconnectAll()
 end
 
 function module:AddMethod(methodName: string, callback: (...any) -> nil): nil
