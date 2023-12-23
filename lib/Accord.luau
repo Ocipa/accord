@@ -14,8 +14,9 @@ type AccordImpl<T> = {
 	get: (self: Accord<T>) -> T,
 	forceUpdate: (self: Accord<T>) -> (),
 
-	connect: (self: Accord<T>, fn: (value: T) -> ()) -> Signal.Connection<T>,
+	connect: (self: Accord<T>, fn: (value: T, oldValue: T) -> ()) -> Signal.Connection<T>,
 	once: (self: Accord<T>, fn: (value: T) -> ()) -> Signal.Connection<T>,
+	observe: <S>(self: Accord<T>, selector: (value: T) -> S, onChange: (value: S) -> ()) -> (),
 	disconnectAll: (self: Accord<T>) -> (),
 }
 
@@ -51,6 +52,21 @@ end
 
 function module:once(fn)
 	return self._signal:once(fn)
+end
+
+function module:observe<S>(selector, onChange)
+	local connection = self:connect(function(value, oldValue)
+		local selectedValue = selector(value)
+
+		-- shallow check if the value has changed.
+		if selectedValue == selector(oldValue) then
+			return
+		end
+
+		onChange(selectedValue)
+	end)
+
+	return connection
 end
 
 function module:disconnectAll()
