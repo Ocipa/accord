@@ -32,7 +32,7 @@ function module:set(value)
 		return
 	end
 
-	self.value = self.guard(v)
+	self.value = if self.guard ~= Symbol.any then self.guard(v) else v
 
 	self._signal:fire(self.value, oldValue)
 end
@@ -58,9 +58,9 @@ function module:disconnectAll()
 end
 
 local constructors = {
-	new = function<T>(value: T, guard: (value: unknown) -> T): Accord<T>
+	new = function<T>(value: any, guard: ((value: unknown) -> T) | any): Accord<T>
 		local self = {
-			value = guard(value),
+			value = if typeof(guard) == "function" then (guard :: any)(value) else value,
 			guard = guard,
 
 			_signal = Signal.new(),

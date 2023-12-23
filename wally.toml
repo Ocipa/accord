@@ -1,8 +1,9 @@
 [package]
 name = "ocipa/accord"
-version = "0.12.0"
+version = "0.13.0"
 license = "MIT"
 authors = ["Ocipa <ocipamail@gmail.com>"]
+description = "https://github.com/Ocipa/accord"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 

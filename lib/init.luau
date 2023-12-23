@@ -12,4 +12,5 @@ return {
 	is = Accord.is,
 
 	abort = Symbol.abort,
+	any = Symbol.any,
 }
