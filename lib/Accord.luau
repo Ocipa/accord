@@ -15,7 +15,7 @@ type AccordImpl<T> = {
 	forceUpdate: (self: Accord<T>) -> (),
 
 	connect: (self: Accord<T>, fn: (value: T, oldValue: T) -> ()) -> Signal.Connection<T>,
-	once: (self: Accord<T>, fn: (value: T) -> ()) -> Signal.Connection<T>,
+	once: (self: Accord<T>, fn: (value: T, oldValue: T) -> ()) -> Signal.Connection<T>,
 	observe: <S>(self: Accord<T>, selector: (value: T) -> S, onChange: (value: S) -> ()) -> (),
 	disconnectAll: (self: Accord<T>) -> (),
 }
