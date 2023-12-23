@@ -1,34 +1,18 @@
 {
-  "name": "accord",
-  "tree": {
-    "$className": "DataModel",
-
-    "Players": {
-      "$className": "Players",
-
-      "$properties": {
-        "CharacterAutoLoads": false
-      }
-    },
-
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
-
-      "accord": {
-        "$path": "src"
-      },
-
-      "$path": "Packages",
-
-      "modules": {
-        "$path": "modules"
-      }
-    },
-
-    "ServerScriptService": {
-      "$className": "ServerScriptService",
-
-      "$path": "test"
+    "name": "accord",
+    "tree": {
+        "$className": "DataModel",
+        "Players": {
+            "$className": "Players",
+            "$properties": {
+                "CharacterAutoLoads": false
+            }
+        },
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "Accord": {
+                "$path": "lib"
+            }
+        }
     }
-  }
 }

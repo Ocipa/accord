@@ -1,6 +1,6 @@
 {
   "name": "accord",
   "tree": {
-    "$path": "src"
+    "$path": "lib"
   }
 }
