@@ -1,19 +1,10 @@
 # Project place file
-/accord.rbxlx
+/*.rbxl
+/*.rbxlx
 
 # Roblox Studio lock files
-/*.rbxlx.lock
 /*.rbxl.lock
-
-/*.rbxl
+/*.rbxlx.lock
 
 /Packages
 /DevPackages
-/client
-
-wally.lock
-
-
-/out
-/node_modules
-/.vscode

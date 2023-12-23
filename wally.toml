@@ -1,16 +1,13 @@
 [package]
 name = "ocipa/accord"
-version = "0.11.0"
-license = "MIT"
-authors = ["Ocipa <ocipamail@gmail.com>"]
+version = "0.12.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
 exclude = [
-    "*.spec.lua", "test*", "README.md", "modules",
-    ".gitmodules","assets", "*rbxl*"
+    "*.spec.lua", "*.spec.luau", "README.md", "assets",
+    ".luaurc", ".gitignore", "aftman.toml", "selene.toml",
+    "test.project.json"
 ]
 
 [dependencies]
-fastsignal = "lucasmzreal/fastsignal@10.1.0"
-signal = "sleitnick/signal@1.2.1"
