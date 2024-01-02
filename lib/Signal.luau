@@ -43,8 +43,7 @@ local function runEventHandlerInFreeThread(...)
 	end
 end
 
--- TODO: figure out a better name for this.
-type SignalMain<T...> = {
+type SignalAttributes<T...> = {
 	_connectionsHead: Connection<T...>?,
 }
 
@@ -56,10 +55,9 @@ type SignalImpl<T...> = {
 	fire: (self: Signal<T...>, T...) -> (),
 }
 
-export type Signal<T...> = typeof(setmetatable({} :: SignalMain<T...>, {} :: { __index: SignalImpl<T...> }))
+export type Signal<T...> = typeof(setmetatable({} :: SignalAttributes<T...>, {} :: { __index: SignalImpl<T...> }))
 
--- TODO: figure out a better name for this.
-type ConnectionMain<T...> = {
+type ConnectionAttributes<T...> = {
 	connected: boolean,
 
 	_signal: Signal<T...>,
@@ -71,7 +69,10 @@ type ConnectionImpl<T...> = {
 	disconnect: (self: Connection<T...>) -> (),
 }
 
-export type Connection<T...> = typeof(setmetatable({} :: ConnectionMain<T...>, {} :: { __index: ConnectionImpl<T...> }))
+export type Connection<T...> = typeof(setmetatable(
+	{} :: ConnectionAttributes<T...>,
+	{} :: { __index: ConnectionImpl<T...> }
+))
 
 local connectionModule: ConnectionImpl<> = {} :: ConnectionImpl<>
 

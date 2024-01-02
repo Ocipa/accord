@@ -1,8 +1,8 @@
 local Signal = require(script.Parent.Signal)
 local Symbol = require(script.Parent.Symbol)
+local Util = require(script.Parent.Util)
 
--- TODO: figure out a better name for this.
-type AccordMain<T> = {
+type AccordAttributes<T> = {
 	value: T,
 	guard: (value: unknown) -> T,
 
@@ -20,7 +20,7 @@ type AccordImpl<T> = {
 	disconnectAll: (self: Accord<T>) -> (),
 }
 
-export type Accord<T> = typeof(setmetatable({} :: AccordMain<T>, {} :: { __index: AccordImpl<T> }))
+export type Accord<T> = typeof(setmetatable({} :: AccordAttributes<T>, {} :: { __index: AccordImpl<T> }))
 
 local module: AccordImpl<unknown> = {} :: AccordImpl<unknown>
 
@@ -55,14 +55,16 @@ function module:once(fn)
 end
 
 function module:observe<S>(selector, onChange)
-	local connection = self:connect(function(value, oldValue)
+	local oldCopy = Util.deepCopy(selector(self.value) :: any)
+
+	local connection = self:connect(function(value, _)
 		local selectedValue = selector(value)
 
-		-- shallow check if the value has changed.
-		if selectedValue == selector(oldValue) then
+		if Util.deepEqual(selectedValue, oldCopy) then
 			return
 		end
 
+		oldCopy = Util.deepCopy(selectedValue)
 		onChange(selectedValue)
 	end)
 
